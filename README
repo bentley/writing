@@ -1,0 +1,38 @@
+Static blog generators are all the rage these days. They take a document
+written in some language (usually Markdown) and turn it into a hierarchy
+of HTML files, along with archives linking to the posts and sorting them
+by date, applying templates, etc.
+
+Mandoc has never been expressive enough for my purposes, but the blog
+engines that allow writing HTML usually want it to be well-formed by
+XML's definition, which is so verbose that I hate writing it.
+
+But I *love* writing manpages. And I like mandoc(1). So after some
+initial experimentation, I've been writing my webpages in mdoc(7) for
+a year now.
+
+I make a few changes to mandoc's output:
+
+- .Em, .Sy and .Li become <em>, <strong> and <code>, respectively.
+- .br becomes <br>.
+- Headers and footers "LS(1) General Commands Manual LS(1)" get stripped.
+- mandoc adds title attributes to most elements with the mdoc that
+  produced them, to ease manual readers into manual writing. Those get
+  stripped too.
+- <title> is populated with the first Nm (and Nd, if present).
+- The page also starts with <header><h1>Nm</h1><p>Nd</header>.
+- An archive page is generated, sorted by the date in Dd, and containing
+  the Nm and Nd of each entry.
+
+And I have some custom macros, included with .so:
+
+- Numbered endnotes, .Be and .Ee, that hyperlink to a note at the end
+  of the document (that in turn hyperlinks back).
+- A fake image macro, ".Im foo bar", becomes "<img src=foo alt=bar>".
+
+Sadly both of those require postprocessing; I haven't been able to
+implement them entirely in roff.
+
+One might ask, "If you're transforming the HTML output of mandoc this
+much, why not just write HTML and transform that directly?"
+I don't have a good answer for that. I just like writing mdoc!
